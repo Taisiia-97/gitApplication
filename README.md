@@ -15,8 +15,8 @@ This application interacts with the GitHub API to retrieve information about rep
 3. Open the `application.yml` file located in the `src/main/resources` directory.
 4. Set your GitHub Personal Access Token (PAT) in the `github.api.token` property.
 5. Save and close the `application.yml` file.
-6. Build the project: `mvn clean install`
-7. Run the application: `mvn spring-boot:run`
+6. Build the project.
+7. Run the application.
 
 ## Usage
 
