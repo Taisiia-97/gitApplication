@@ -25,12 +25,11 @@ public class GitHubServiceImpl implements GitHubService{
     @Value("${github.api.url}")
     private String url;
 
-    @Value("${github.api.token}")
-    private String token;
+
     @Override
     public List<GitRepositoryDto> getRepoByUserName(String userName) {
-        WebClient webClient = webClientBuilder.baseUrl(url).
-                 defaultHeader(HttpHeaders.AUTHORIZATION, "Bearer " + token).build();
+        WebClient webClient = webClientBuilder.baseUrl(url)
+                .build();
         List<GitHubRepo> gitHubRepoList = getGitHubRepoList(webClient,userName);
 
 
