@@ -1,0 +1,6 @@
+server:
+  port: 8090
+github:
+  api:
+    url: "https://api.github.com"
+    token: "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"
