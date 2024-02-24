@@ -6,15 +6,17 @@ This application interacts with the GitHub API to retrieve information about rep
 
 ## Features
 
-- Retrieve repositories by a GitHub username.
-- Get a list of branches for a specific repository.
+- Retrieve repositories by a GitHub username and a list of branches for a specific repository.
 
 ## Installation
 
 1. Clone the repository: `git clone https://github.com/Taisiia-97/gitApplication.git`
 2. Navigate to the project directory: `cd gitApplication`
-3. Build the project: `./gradlew build`
-4. Run the application: `./gradlew bootRun`
+3. Open the `application.yml` file located in the `src/main/resources` directory.
+4. Set your GitHub Personal Access Token (PAT) in the `github.api.token` property.
+5. Save and close the `application.yml` file.
+6. Build the project: `mvn clean install`
+7. Run the application: `mvn spring-boot:run`
 
 ## Usage
 
@@ -26,18 +28,22 @@ To use the application, send GET requests to the following endpoints:
 
 ## Dependencies
 
-- Java 11
-- Spring Boot
+- Java 21
+- Spring Boot 3
 - WebClient
 - Lombok
 
 ## Configuration
 
-Make sure to configure the following properties in your application:
+Ensure that you have configured the `application.yml` file with the following properties under the `github.api` section:
 
-- `github.api.url`: The base URL for the GitHub API.
-- `github.api.token`: Personal access token for GitHub API authentication.
-
+```yaml
+server:
+  port: 8090
+github:
+  api:
+    url: "https://api.github.com"
+    token: "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"
 ## Endpoints
 
 ### Retrieve Repositories by Username
