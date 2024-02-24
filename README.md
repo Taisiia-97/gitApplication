@@ -13,7 +13,8 @@ This application interacts with the GitHub API to retrieve information about rep
 1. Clone the repository: `git clone https://github.com/Taisiia-97/gitApplication.git`
 2. Navigate to the project directory: `cd gitApplication`
 3. Open the `application.yml` file located in the `src/main/resources` directory.
-4. Set your GitHub Personal Access Token (PAT) in the `github.api.token` property.
+4. Set your GitHub Personal Access Token (PAT) in the `github.api.token` property (For this project, you'll need to select at least the `repo` scope to access repositories.
+ Additionally, you may need to select the `metadata:read` scope to access certain metadata).
 5. Save and close the `application.yml` file.
 6. Build the project.
 7. Run the application.
