@@ -44,10 +44,7 @@ github:
   api:
     url: "https://api.github.com"
     token: "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"
-.
-
-
-
+```
 
 
 ## Endpoints
