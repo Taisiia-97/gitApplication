@@ -3,3 +3,4 @@ server:
 github:
   api:
     url: "https://api.github.com"
+
