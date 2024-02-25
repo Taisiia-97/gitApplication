@@ -3,6 +3,7 @@
 ## Description
 
 This application interacts with the GitHub API to retrieve information about repositories and branches.
+https://developer.github.com/v3 was used as a backing API.
 
 ## Features
 
