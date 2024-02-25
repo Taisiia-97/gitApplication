@@ -3,4 +3,3 @@ server:
 github:
   api:
     url: "https://api.github.com"
-    token: "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"

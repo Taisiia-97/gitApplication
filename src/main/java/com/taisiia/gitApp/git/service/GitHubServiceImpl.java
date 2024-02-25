@@ -7,6 +7,7 @@ import com.taisiia.gitApp.git.exception.GitHubException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
@@ -19,50 +20,47 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class GitHubServiceImpl implements GitHubService{
-    private final WebClient.Builder webClientBuilder;
-
 
     @Value("${github.api.url}")
-    private String url;
+    private  String url;
 
-    @Value("${github.api.token}")
-    private String token;
     @Override
     public List<GitRepositoryDto> getRepoByUserName(String userName) {
-        WebClient webClient = webClientBuilder.baseUrl(url)
-                .defaultHeader(HttpHeaders.AUTHORIZATION, "Bearer " + token)
-                .build();
-        List<GitHubRepo> gitHubRepoList = getGitHubRepoList(webClient,userName);
+        List<GitHubRepo> gitHubRepoList = getGitHubRepoList(userName);
 
-
-       return gitHubRepoList.stream().map(element ->{
-           List<Branch> brunchList = getBrunchList(webClient, element.getOwner().getLogin(), element.getName());
+        return gitHubRepoList.stream().map(element ->{
+           List<Branch> brunchList = getBrunchList( element.getOwner().getLogin(), element.getName());
            return new GitRepositoryDto(element.getName(),element.getOwner().getLogin(),brunchList);
        }).collect(Collectors.toList());
-
     }
 
-    public List<GitHubRepo> getGitHubRepoList(WebClient webClient, String userName){
-        return webClient.get()
+
+    public List<GitHubRepo> getGitHubRepoList( String userName){
+        return WebClient.create(url)
+                .get()
                 .uri("/users/{username}/repos", userName)
+                .header(HttpHeaders.ACCEPT,MediaType.APPLICATION_JSON_VALUE)
                 .retrieve()
                 .bodyToFlux(GitHubRepo.class)
                 .filter(element -> !element.isFork())
                 .switchIfEmpty(Mono.error(new GitHubException("User not found")))
                 .collectList()
-                .onErrorResume(WebClientResponseException.NotFound.class, e ->
-                                Mono.error(new GitHubException(e.getMessage())))
+                .onErrorResume(WebClientResponseException.NotFound.class, e -> Mono.error(new GitHubException(e.getMessage())))
+                .onErrorResume(WebClientResponseException.Unauthorized.class, error -> Mono.error(new GitHubException("Unauthorized access")))
+                .onErrorResume(WebClientResponseException.class, error -> Mono.error(new GitHubException("GitHub API error")))
                 .block();
     }
 
-    public List<Branch> getBrunchList(WebClient webClient, String owner, String repo){
-        return webClient.get()
+    public List<Branch> getBrunchList( String owner, String repo){
+        return WebClient.create(url).get()
                 .uri("/repos/{owner}/{repo}/branches", owner, repo)
+                .header(HttpHeaders.ACCEPT,MediaType.APPLICATION_JSON_VALUE)
                 .retrieve()
                 .bodyToFlux(Branch.class)
                 .collectList()
-                .onErrorResume(WebClientResponseException.NotFound.class, e ->
-                Mono.error(new GitHubException(e.getMessage())))
+                .onErrorResume(WebClientResponseException.NotFound.class, e -> Mono.error(new GitHubException(e.getMessage())))
+                .onErrorResume(WebClientResponseException.Unauthorized.class, error -> Mono.error(new GitHubException("Unauthorized access")))
+                .onErrorResume(WebClientResponseException.class, error -> Mono.error(new GitHubException("GitHub API error")))
                 .block();
     }
 }
