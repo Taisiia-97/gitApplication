@@ -1,13 +1,6 @@
 package com.taisiia.gitApp.git.dto;
 
 
-import lombok.*;
+public record Owner (String login ) {
 
-@AllArgsConstructor
-@NoArgsConstructor
-@Data
-@Getter
-@Setter
-public class Owner {
-    private String login;
 }

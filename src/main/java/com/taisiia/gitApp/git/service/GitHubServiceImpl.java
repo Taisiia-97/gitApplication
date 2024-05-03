@@ -30,8 +30,8 @@ public class GitHubServiceImpl implements GitHubService{
         List<GitHubRepo> gitHubRepoList = getGitHubRepoList(userName);
 
         return gitHubRepoList.stream().map(element ->{
-           List<Branch> brunchList = getBrunchList( element.getOwner().getLogin(), element.getName());
-           return new GitRepositoryDto(element.getName(),element.getOwner().getLogin(),brunchList);
+           List<Branch> brunchList = getBrunchList( element.owner().login(), element.name());
+           return new GitRepositoryDto(element.name(),element.owner().login(),brunchList);
        }).collect(Collectors.toList());
     }
 
@@ -43,8 +43,7 @@ public class GitHubServiceImpl implements GitHubService{
                 .header(HttpHeaders.ACCEPT,MediaType.APPLICATION_JSON_VALUE)
                 .retrieve()
                 .bodyToFlux(GitHubRepo.class)
-                .filter(element -> !element.isFork())
-                .switchIfEmpty(Mono.error(new GitHubException("User not found")))
+                .filter(element -> !element.fork())
                 .collectList()
                 .onErrorResume(WebClientResponseException.NotFound.class, e -> Mono.error(new GitHubException(e.getMessage())))
                 .onErrorResume(WebClientResponseException.Unauthorized.class, error -> Mono.error(new GitHubException("Unauthorized access")))
