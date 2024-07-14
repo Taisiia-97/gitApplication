@@ -22,8 +22,10 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class GitHubServiceImpl implements GitHubService{
 
+
     @Value("${github.api.url}")
     private  String url;
+
 
     @Override
     public List<GitRepositoryDto> getRepoByUserName(String userName) {
@@ -52,7 +54,8 @@ public class GitHubServiceImpl implements GitHubService{
     }
 
     public List<Branch> getBrunchList( String owner, String repo){
-        return WebClient.create(url).get()
+        return WebClient.create(url)
+                .get()
                 .uri("/repos/{owner}/{repo}/branches", owner, repo)
                 .header(HttpHeaders.ACCEPT,MediaType.APPLICATION_JSON_VALUE)
                 .retrieve()
